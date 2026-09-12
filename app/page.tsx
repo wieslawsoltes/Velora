@@ -1,0 +1,2 @@
+export const dynamic = "force-dynamic";
+export default async function Home({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}) { const p=await searchParams; const q=new URLSearchParams(); for(const k of ['project','share'])if(typeof p[k]==='string')q.set(k,p[k] as string);return <iframe title="Velora Design Studio" src={'/studio/index.html'+(q.size?'?'+q.toString():'')} style={{position:'fixed',inset:0,border:0,width:'100%',height:'100%'}} allow="clipboard-write; fullscreen; web-share"/>; }

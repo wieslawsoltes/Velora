@@ -1,0 +1,14 @@
+import {readFile,writeFile,cp,mkdir,rm} from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const out=path.join(root,'pages-dist');
+await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
+await cp(path.join(root,'public/studio'),path.join(out,'studio'),{recursive:true});
+await cp(path.join(root,'public/favicon.svg'),path.join(out,'favicon.svg'));
+let html=await readFile(path.join(root,'public/studio/index.html'),'utf8');
+html=html.replaceAll('href="/favicon.svg"','href="./favicon.svg"').replaceAll('href="/studio/','href="./studio/').replaceAll('src="/studio/','src="./studio/');
+html=html.replace('<script type="module"','<script>globalThis.VELORA_CONFIG={storage:"indexeddb"};</script><script type="module"');
+await writeFile(path.join(out,'index.html'),html);await rm(path.join(out,'studio/index.html'));
+await writeFile(path.join(out,'.nojekyll'),'');
+console.log('Built GitHub Pages edition in pages-dist/');
